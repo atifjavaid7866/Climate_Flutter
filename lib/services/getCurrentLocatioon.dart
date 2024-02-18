@@ -17,6 +17,7 @@ class GetCurrentUserLocation {
 
       lati = position.latitude;
       long = position.longitude;
+      print(lati + long);
 
       final finalUri =
           'https://api.openweathermap.org/data/2.5/weather?lat=$lati&lon=$long&appid=$whether_api_Key';
@@ -24,6 +25,7 @@ class GetCurrentUserLocation {
       Networking networkreq = Networking(finalUri);
       var data = await networkreq.GetData();
       var temp = data['main']['temp'];
+      var desc = data[0]['description']; //weather[0].description
     } catch (e) {
       print('Unable to Load Location');
     }

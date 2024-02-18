@@ -1,5 +1,7 @@
-import 'package:climate_flutter/services/getCurrentLocation.dart';
+import 'package:climate_flutter/services/location.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'location_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -7,38 +9,30 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-  GetCurrentUserLocation locationObj = GetCurrentUserLocation();
-  var getposition;
-  var lati;
-  var long;
+  GetUserLocation getLocation = GetUserLocation();
+
+  var data;
+
   void initState() {
     super.initState();
     CheckState();
   }
 
   void CheckState() async {
-    await locationObj.GetLocationData();
-    setState(() {
-      lati = locationObj.lati;
-      long = locationObj.long;
-    });
+    data = await getLocation.GetState();
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return LocationScreen(obj: data);
+    }));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: TextButton(
-          onPressed: () {},
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Get Location'),
-              SizedBox(height: 20.0),
-              Text('${locationObj.lati}'),
-              Text('${locationObj.long}'),
-            ],
-          ),
+        child: SpinKitDoubleBounce(
+          color: Colors.red,
+          size: 50.0,
         ),
       ),
     );

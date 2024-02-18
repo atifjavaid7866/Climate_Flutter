@@ -1,19 +1,46 @@
+import 'package:climate_flutter/screens/city_screen.dart';
+import 'package:climate_flutter/services/location.dart';
 import 'package:flutter/material.dart';
 import 'package:climate_flutter/utilities/constants.dart';
+import 'package:climate_flutter/services/whether.dart';
 
 class LocationScreen extends StatefulWidget {
+  var obj;
+
+  LocationScreen({required this.obj}) {}
   @override
   _LocationScreenState createState() => _LocationScreenState();
 }
 
 class _LocationScreenState extends State<LocationScreen> {
+  WeatherModel whetherModel = WeatherModel();
+  var temperature;
+  var city;
+  var condition;
+  var cusIcon;
+  var getMessage;
+  void initState() {
+    super.initState();
+    UpdateUi(widget.obj);
+  }
+
+  void UpdateUi(dynamic obj) {
+    setState(() {
+      temperature = obj['main']['temp'].toInt();
+      city = obj['name'];
+      condition = obj['weather'][0]['id'];
+      cusIcon = whetherModel.getWeatherIcon(condition);
+      getMessage = whetherModel.getMessage(temperature);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/location_background.jpg'),
+            image: AssetImage('images/whetherappbackground.jpg'),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
                 Colors.white.withOpacity(0.8), BlendMode.dstATop),
@@ -29,14 +56,26 @@ class _LocationScreenState extends State<LocationScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      var updateLocation = GetUserLocation().GetState();
+                      UpdateUi(updateLocation);
+                    },
                     child: Icon(
                       Icons.near_me,
                       size: 50.0,
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        var userInputCity =
+                            Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return CityScreen();
+                          },
+                        ));
+                      });
+                    },
                     child: Icon(
                       Icons.location_city,
                       size: 50.0,
@@ -46,23 +85,37 @@ class _LocationScreenState extends State<LocationScreen> {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 15.0),
-                child: Row(
-                  children: <Widget>[
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      '32°',
-                      style: kTempTextStyle,
+                      ' ${city}',
+                      style: TextStyle(fontSize: 40.0),
                     ),
-                    Text(
-                      '☀️',
-                      style: kConditionTextStyle,
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          '${temperature.toString() + "\u00B0"}',
+                          style: kTempTextStyle,
+                        ),
+                        Text(
+                          '$cusIcon',
+                          style: TextStyle(
+                            fontSize: 100.0,
+                            // color: temperature <= 13
+                            //     ? Color(0xffeade75)
+                            //     : Colors.yellow,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(right: 15.0),
+                padding: EdgeInsets.only(right: 35.0, bottom: 30.0, left: 15.0),
                 child: Text(
-                  "It's 🍦 time in San Francisco!",
+                  '$getMessage in $city',
                   textAlign: TextAlign.right,
                   style: kMessageTextStyle,
                 ),

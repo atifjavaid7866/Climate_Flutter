@@ -11,7 +11,7 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   GetUserLocation getLocation = GetUserLocation();
 
-  var data;
+  var decoded_data;
 
   void initState() {
     super.initState();
@@ -19,10 +19,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void CheckState() async {
-    data = await getLocation.GetState();
-
+    decoded_data = await getLocation.GetState();
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return LocationScreen(obj: data);
+      return LocationScreen(
+        curLocationObj: decoded_data,
+      );
     }));
   }
 

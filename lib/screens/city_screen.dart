@@ -14,7 +14,7 @@ class _CityScreenState extends State<CityScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/city_background.jpg'),
+            image: AssetImage('images/weather_image.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -24,11 +24,11 @@ class _CityScreenState extends State<CityScreen> {
             children: <Widget>[
               Align(
                 alignment: Alignment.topLeft,
-                child: ElevatedButton(
+                child: IconButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Icon(
+                  icon: Icon(
                     Icons.arrow_back_ios,
                     size: 50.0,
                   ),
@@ -36,23 +36,32 @@ class _CityScreenState extends State<CityScreen> {
               ),
               Container(
                 padding: EdgeInsets.all(20.0),
-                child: TextFormField(
+                child: TextField(
+                  style: TextStyle(color: Color(0xff080808)),
                   onChanged: (value) {
                     setState(() {
                       cityName = value;
                     });
                   },
                   decoration: InputDecoration(
+                    filled: true,
                     fillColor: Colors.white,
                     hintText: 'Enter City Name',
-                    icon: Icon(Icons.location_city),
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
+                    icon: Icon(
+                      Icons.location_city,
+                      color: Color(0xff1e91ed),
+                      size: 30.0,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                 ),
               ),
-              ElevatedButton(
+              TextButton(
                 onPressed: () {
                   Navigator.pop(context, cityName);
                 },
